@@ -12,16 +12,20 @@ import { Component } from '@angular/core';
 
 import { DemoFrame } from '../components/demo-frame';
 import { A2uiChatComponent } from '../features/a2ui/a2ui-chat.component';
+import { AgUiChatComponent } from '../features/ag-ui/ag-ui-chat.component';
 import { MediaChatComponent } from '../features/attachments/media-chat.component';
 import { ChatUiDemoComponent } from '../features/chat-ui/chat-ui-demo.component';
+import { MyAgentChatComponent } from '../features/copilot-runtime/my-agent-chat.component';
 import { HeadlessChatComponent } from '../features/headless/headless-chat.component';
 import { HitlChatComponent } from '../features/hitl/hitl-chat.component';
 import { MemoryDemoComponent } from '../features/memory/memory-demo.component';
 import { VoiceChatComponent } from '../features/media/voice-chat.component';
 import { QuickstartChat } from '../features/quickstart/quickstart-chat';
 import { SharedStateChatComponent } from '../features/shared-state/shared-state-chat.component';
+import { SubagentsChatComponent } from '../features/subagents/subagents-chat.component';
 import { ThreadsDemoComponent } from '../features/threads/threads-demo.component';
 import { ToolsChatComponent } from '../features/tools/tools-chat.component';
+import { WebmcpChatComponent } from '../features/webmcp/webmcp-chat.component';
 
 @Component({
   selector: 'app-quickstart-demo',
@@ -120,3 +124,37 @@ export class AttachmentsDemo {}
   ></app-demo-frame>`,
 })
 export class HeadlessDemo {}
+
+@Component({
+  selector: 'app-webmcp-demo',
+  imports: [DemoFrame, WebmcpChatComponent],
+  template: `<app-demo-frame backTo="/webmcp"
+    ><app-webmcp-chat
+  /></app-demo-frame>`,
+})
+export class WebmcpDemo {}
+
+@Component({
+  selector: 'app-copilot-runtime-demo',
+  imports: [DemoFrame, MyAgentChatComponent],
+  template: `<app-demo-frame backTo="/copilot-runtime"
+    ><div style="height: 100%"><app-my-agent-chat /></div
+  ></app-demo-frame>`,
+})
+export class CopilotRuntimeDemo {}
+
+@Component({
+  selector: 'app-ag-ui-demo',
+  imports: [DemoFrame, AgUiChatComponent],
+  template: `<app-demo-frame backTo="/ag-ui"><app-ag-ui-chat /></app-demo-frame>`,
+})
+export class AgUiDemo {}
+
+@Component({
+  selector: 'app-subagents-demo',
+  imports: [DemoFrame, SubagentsChatComponent],
+  template: `<app-demo-frame backTo="/subagents"
+    ><app-subagents-chat
+  /></app-demo-frame>`,
+})
+export class SubagentsDemo {}

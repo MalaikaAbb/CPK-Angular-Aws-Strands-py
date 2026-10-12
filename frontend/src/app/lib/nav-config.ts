@@ -151,6 +151,17 @@ export const NAV: NavGroup[] = [
           'Reading and writing agent state through injectAgentStore, and publishing read-only app context two ways.',
         status: 'working',
       },
+      {
+        path: '/webmcp',
+        hasDemo: true,
+        title: 'WebMCP',
+        docPath: '/angular/strands/webmcp',
+        summary:
+          'A frontend tool opted into WebMCP, so the same handler answers the CopilotKit agent and browser agents through document.modelContext.',
+        status: 'partial',
+        statusNote:
+          'The chat half runs anywhere. The WebMCP half needs Chrome 149+ with the WebMCP origin trial or chrome://flags/#enable-webmcp-testing; elsewhere CopilotKit skips registration by design.',
+      },
     ],
   },
   {
@@ -196,6 +207,43 @@ export const NAV: NavGroup[] = [
         docPath: '/angular/strands/guides/threads-memory-attachments-headless',
         summary:
           'A transcript and composer built from scratch on injectAgentStore and CopilotKitCore.runAgent.',
+        status: 'working',
+      },
+    ],
+  },
+  {
+    title: 'Runtime and protocol',
+    routes: [
+      {
+        path: '/copilot-runtime',
+        hasDemo: true,
+        title: 'Copilot Runtime',
+        docPath: '/angular/strands/copilot-runtime',
+        summary:
+          'A second agents-map key, my_agent, addressed from copilot-chat by that key alone.',
+        status: 'working',
+      },
+      {
+        path: '/ag-ui',
+        hasDemo: true,
+        title: 'AG-UI',
+        docPath: '/angular/strands/ag-ui',
+        summary:
+          'injectAgentStore signals for message count and run status, and a raw AG-UI event subscription on store().agent.',
+        status: 'working',
+      },
+    ],
+  },
+  {
+    title: 'Multi-agent',
+    routes: [
+      {
+        path: '/subagents',
+        hasDemo: true,
+        title: 'Sub-agents',
+        docPath: '/angular/strands/multi-agent/subagents',
+        summary:
+          'A supervisor delegating to research, writing, and critique sub-agents, with a live delegation log driven by shared state.',
         status: 'working',
       },
     ],

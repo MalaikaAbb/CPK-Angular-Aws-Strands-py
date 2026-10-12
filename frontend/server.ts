@@ -15,7 +15,8 @@
  *
  * `default` and `support` resolve to the same AWS Strands process. `support`
  * exists so the doc snippets that use `agentId="support"` (Chat UI, Threads)
- * run verbatim.
+ * run verbatim. `my_agent` and `research-agent` exist for the same reason, for
+ * the Copilot Runtime and AG-UI pages respectively.
  *
  * `a2ui: {}` enables A2UIMiddleware for every registered agent, per
  * https://docs.copilotkit.ai/angular/strands/guides/a2ui
@@ -34,6 +35,12 @@ const runtime = new CopilotRuntime({
   agents: {
     default: new HttpAgent({ url: agentUrl }),
     support: new HttpAgent({ url: agentUrl }),
+    // `my_agent` is the key — the one string the frontend may ask for.
+    // Verbatim from https://docs.copilotkit.ai/angular/strands/copilot-runtime
+    my_agent: new HttpAgent({ url: "http://localhost:8000/" }),
+    // The id the AG-UI guide's injectAgentStore snippets ask for.
+    // https://docs.copilotkit.ai/angular/strands/ag-ui
+    "research-agent": new HttpAgent({ url: agentUrl }),
   },
   a2ui: {},
 });

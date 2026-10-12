@@ -26,7 +26,7 @@ Browser (Angular 22, zoneless)
   │  POST http://localhost:8200/api/copilotkit
   ▼
 Copilot Runtime  ·  localhost:8200        ← Node, frontend/server.ts
-  │  agents: { default, support } → new HttpAgent({ url })
+  │  agents: { default, support, my_agent, research-agent } → new HttpAgent({ url })
   │  a2ui: {}  → A2UIMiddleware
   │  POST http://localhost:8000/          ← AG-UI over SSE
   ▼
@@ -37,7 +37,7 @@ Model  (gpt-5.4)
 ```
 
 - **Why the runtime is its own process.** Unlike the React/Next quickstart — where the runtime lives inside the Next app as an API route — Angular has no server route to host it, so the Copilot Runtime runs as a standalone Node process.
-- **Why two agent ids.** `default` and `support` both resolve to the same AWS Strands process. `default` is what CopilotKit's prebuilt components use with no configuration; `support` exists so the Chat UI and Threads guides' snippets — written as `agentId="support"` — run exactly as published.
+- **Why four agent ids.** `default`, `support`, `my_agent`, and `research-agent` all resolve to the same AWS Strands process. `default` is what CopilotKit's prebuilt components use with no configuration; the other three exist so guide snippets run exactly as published — `support` for Chat UI and Threads, `my_agent` for Copilot Runtime, `research-agent` for AG-UI.
 - **The model key never reaches the browser**, and never reaches the runtime either. Only the AWS Strands process holds it.
 - **The binding is the generic `HttpAgent`.** `create_strands_app` exposes a plain AG-UI endpoint, so there is no Strands-specific server-side wrapper to import into the runtime.
 
@@ -156,7 +156,7 @@ The one-command check the quickstart prescribes:
 curl -s http://localhost:8200/api/copilotkit/info
 ```
 
-It should list `default` and `support` under `agents`, with `"a2uiEnabled": true`:
+It should list `default`, `support`, `my_agent`, and `research-agent` under `agents`, with `"a2uiEnabled": true`:
 
 ```json
 {"version":"1.67.1","agents":{"default":{"name":"default",...},"support":{...}},"a2uiEnabled":true,...}
@@ -199,6 +199,10 @@ Demo routes share the app-root provider, so a conversation started in one demo c
 | `/shared-state` | Shared state and agent context | The panel round-trips in the browser; the agent half needs backend state — see Known issues. |
 | `/threads` · `/memory` | Threads, memory, attachments, headless | Premium. Unlicensed, the locked state / fallback message *is* the pass. |
 | `/attachments` · `/headless` | Threads, memory, attachments, headless | Picker, drag-and-drop, paste; and a chat with no CopilotKit chrome. |
+| `/webmcp` | WebMCP | Ask which orders are open — the chat calls `searchOrders`. The WebMCP half needs Chrome 149+ with WebMCP enabled. |
+| `/copilot-runtime` | Copilot Runtime | `/info` lists `my_agent`, and a chat addressed by that key alone streams a reply. |
+| `/ag-ui` | AG-UI | Run status and message count update live; the console logs raw AG-UI events. |
+| `/subagents` | Sub-agents | Ask it to research, write, and critique — the delegation log grows to 3 entries. |
 | `/status` | — | Every route and its status in one table. |
 
 ---
@@ -267,7 +271,7 @@ The `/shared-state` route's component expects agent state shaped `{ notes, prior
 
 ## Doc drift detection
 
-`/doc-sync` keeps this repo honest about the docs it mirrors. Press **Sync docs now** (on the landing page or on `/doc-sync`) and it fetches the markdown source behind all 9 tracked doc pages, diffs each against the copy stored in `doc-snapshot/`, replaces that copy, and reports what moved — ranked by whether the change can actually break an implementation.
+`/doc-sync` keeps this repo honest about the docs it mirrors. Press **Sync docs now** (on the landing page or on `/doc-sync`) and it fetches the markdown source behind all 13 tracked doc pages, diffs each against the copy stored in `doc-snapshot/`, replaces that copy, and reports what moved — ranked by whether the change can actually break an implementation.
 
 Doc pages are fetched by appending `.md` to their URL, which returns the authored MDX rather than the rendered HTML. Every response is checked for `text/markdown` before it is allowed near the snapshot: a URL that misses the markdown handler still answers `200` with the HTML app shell, and writing that in would destroy the baseline. A run commits all pages or none.
 
@@ -324,14 +328,17 @@ aws-strands-py/
 │           ├── components/          # harness chrome (nav, header, source, health)
 │           ├── features/            # ★ the doc code that actually runs
 │           │   ├── quickstart/  chat-ui/  tools/  a2ui/
-│           │   └── media/  hitl/  shared-state/  threads/  memory/
-│           │       attachments/  headless/
+│           │   ├── media/  hitl/  shared-state/  threads/  memory/
+│           │   │   attachments/  headless/
+│           │   └── webmcp/  copilot-runtime/  ag-ui/  subagents/
 │           └── pages/               # one page per doc route + demos.ts + status
 │
 └── backend/                   # AWS Strands Python agent over AG-UI  → :8000
     ├── pyproject.toml         # strands-agents[openai], ag-ui-strands, fastapi
     ├── uv.lock
-    └── main.py                # ★ Agent, weather tool, StrandsAgent + create_strands_app
+    ├── main.py                # ★ Agent, tools, StrandsAgent + tool_behaviors + create_strands_app
+    ├── tools.py               # sub-agent setup and delegation tools (Sub-agents guide)
+    └── state.py               # sub-agent state_from_result hook (showcase source)
 ```
 
 The nav, every route header, the demo links, and the status table all derive from `frontend/src/app/lib/nav-config.ts`, so a route's status is stated once.
@@ -344,6 +351,10 @@ The nav, every route header, the demo links, and the status table all derive fro
 
 **Getting Started** — [Angular + AWS Strands quickstart](https://docs.copilotkit.ai/angular/strands/quickstart)
 
-**Guides** — [Chat UI and customization](https://docs.copilotkit.ai/angular/strands/guides/chat-ui) · [Frontend tools and generative UI](https://docs.copilotkit.ai/angular/strands/guides/frontend-tools-generative-ui) · [A2UI](https://docs.copilotkit.ai/angular/strands/guides/a2ui) · [Voice and multimodal](https://docs.copilotkit.ai/angular/strands/guides/voice-multimodal) · [Human-in-the-loop and interrupts](https://docs.copilotkit.ai/angular/strands/guides/human-in-the-loop) · [Shared state and agent context](https://docs.copilotkit.ai/angular/strands/guides/shared-state) · [Threads, memory, attachments, and headless UI](https://docs.copilotkit.ai/angular/strands/guides/threads-memory-attachments-headless)
+**Guides** — [Chat UI and customization](https://docs.copilotkit.ai/angular/strands/guides/chat-ui) · [Frontend tools and generative UI](https://docs.copilotkit.ai/angular/strands/guides/frontend-tools-generative-ui) · [A2UI](https://docs.copilotkit.ai/angular/strands/guides/a2ui) · [Voice and multimodal](https://docs.copilotkit.ai/angular/strands/guides/voice-multimodal) · [Human-in-the-loop and interrupts](https://docs.copilotkit.ai/angular/strands/guides/human-in-the-loop) · [Shared state and agent context](https://docs.copilotkit.ai/angular/strands/guides/shared-state) · [Threads, memory, attachments, and headless UI](https://docs.copilotkit.ai/angular/strands/guides/threads-memory-attachments-headless) · [WebMCP](https://docs.copilotkit.ai/angular/strands/webmcp)
+
+**Runtime and protocol** — [Copilot Runtime](https://docs.copilotkit.ai/angular/strands/copilot-runtime) · [AG-UI](https://docs.copilotkit.ai/angular/strands/ag-ui)
+
+**Multi-agent** — [Sub-agents](https://docs.copilotkit.ai/angular/strands/multi-agent/subagents)
 
 **External** — [AWS Strands Agents](https://strandsagents.com) · [AG-UI protocol](https://ag-ui.com) · [Angular API reference](https://docs.copilotkit.ai/reference/angular)

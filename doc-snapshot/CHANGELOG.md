@@ -8,6 +8,115 @@ Holds the 3 most recent dated entries. When a change lands on a fourth
 date, the oldest entry is dropped. Entries are counted, not aged, so a gap of
 weeks between changes does not expire anything.
 
+## 2026-10-19
+
+### 12:11 UTC — 9 pages, highest severity high
+
+**High — A2UI schemas, styling, and recovery**
+
+`/angular/strands/guides/a2ui` · route `/a2ui` · under “Choose a schema strategy” · in a `typescript` block
+
+24 code lines, 1 heading, 17 prose lines changed. The number of fenced code blocks changed.
+
+````diff
+- // features/a2ui/a2ui-catalogs.ts
+- const fixedDefinitions = {
++ // features/a2ui/a2ui-definitions.ts
++ export const fixedDefinitions = {
+- };
++ } satisfies A2UICatalogDefinitions;
++ A catalog is required: without one, A2UI stays off even when the runtime
++ enables it, and CopilotKit logs a warning.
+````
+
+**High — Voice and multimodal input**
+
+`/angular/strands/guides/voice-multimodal` · route `/voice-multimodal` · under “Accept voice input”
+
+5 code lines, 1 heading, 15 prose lines changed. The number of fenced code blocks changed.
+
+````diff
+- access. Your Runtime must also have transcription configured; a visible
+- microphone does not make an unavailable transcription service succeed.
++ access.
++ 
++ ### Configure Runtime transcription
++ 
++ Follow the [Voice backend setup](/angular/strands/guides/voice-multimodal#backend) to add a dedicated Runtime
++ route and transcription service. Keep speech-provider credentials separate
+````
+
+**Medium — Introduction**
+
+`/angular/strands` · routes `/`, `/doc-sync` · under “Angular”
+
+1 heading, 11 prose lines changed.
+
+````diff
+- body="Add durable threads, inspection, and managed or self-hosted CopilotKit Intelligence without changing the Angular frontend APIs in this guide."
++ body="Add threads, inspection, and cloud-hosted or self-hosted CopilotKit Intelligence without changing the Angular frontend APIs in this guide."
++ ## Start with your coding agent
++ 
++ Use this prompt to connect your Angular app to Copilot Runtime with the selected agent backend, then verify a working conversation. You can also follow the manual steps below.
++ 
++ Ask your coding agent to follow the setup steps on this page for your selected framework and frontend.
++ 
+````
+
+**Medium — Quickstart**
+
+`/angular/strands/quickstart` · route `/quickstart` · under “Angular”
+
+1 heading, 11 prose lines changed.
+
+````diff
+- body="Add durable threads, inspection, and managed or self-hosted CopilotKit Intelligence without changing the Angular frontend APIs in this guide."
++ body="Add threads, inspection, and cloud-hosted or self-hosted CopilotKit Intelligence without changing the Angular frontend APIs in this guide."
++ ## Start with your coding agent
++ 
++ Use this prompt to connect your Angular app to Copilot Runtime with the selected agent backend, then verify a working conversation. You can also follow the manual steps below.
++ 
++ Ask your coding agent to follow the setup steps on this page for your selected framework and frontend.
++ 
+````
+
+**Low — Frontend tools and generative UI**
+
+`/angular/strands/guides/frontend-tools-generative-ui` · route `/frontend-tools-generative-ui` · under “Choose a generative UI path”
+
+2 prose lines changed.
+
+````diff
+- | A2UI | A server emits A2UI operations or snapshots | Runtime capability turns on the built-in renderer; an optional `a2ui` config supplies a catalog or theme |
++ | A2UI | A server emits A2UI operations or snapshots | Set `a2ui.catalog` in `provideCopilotKit` to turn on the built-in renderer; without a catalog A2UI stays off |
+````
+
+**Info — AG-UI**
+
+`/angular/strands/ag-ui` · route `/ag-ui`
+
+Now tracked for the first time.
+
+**Info — Copilot Runtime**
+
+`/angular/strands/copilot-runtime` · route `/copilot-runtime`
+
+Now tracked for the first time.
+
+**Info — Sub-agents**
+
+`/angular/strands/multi-agent/subagents` · route `/subagents`
+
+Now tracked for the first time.
+
+**Info — WebMCP**
+
+`/angular/strands/webmcp` · route `/webmcp`
+
+Now tracked for the first time.
+
+---
+
 ## 2026-09-11
 
 ### 08:59 UTC — 5 pages, highest severity high
@@ -90,6 +199,8 @@ weeks between changes does not expire anything.
 - - **Hashbrown is unsupported.** The stable Hashbrown Angular package does not support the complete Angular 20 through 22 policy.
 + - **Hashbrown is unsupported.** The stable Hashbrown Angular package does not support the Angular 22 policy.
 ````
+
+---
 
 ---
 

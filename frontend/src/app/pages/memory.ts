@@ -13,14 +13,21 @@ import { Callout, Panel, SourceCode, TryIt } from '../components/ui';
       <ui-try-it>
         <p class="mt-1 text-slate-700">Open the demo and read the left panel.</p>
         <p class="mt-2 text-slate-700">
-          <strong>Pass (this runtime):</strong> "Memory is not available for
-          this runtime." — the <code>isAvailable()</code> gate resolved false
-          and the guide's fallback rendered, which is the whole point of the
-          sample.
-          <strong>Pass (a runtime with memory routes):</strong> the memory list
-          renders and <strong>Forget</strong> removes an entry.
+          <strong>Pass (entitled project):</strong> the memory list renders
+          and <strong>Forget</strong> removes an entry.
+          <strong>Pass (runtime without memory):</strong> "Memory is not
+          available for this runtime." — the <code>isAvailable()</code> gate
+          resolved false and the guide's fallback rendered.
           <strong>Fail:</strong> an empty panel with neither the list nor the
           fallback, or a thrown error.
+        </p>
+        <p class="mt-2 text-slate-700">
+          <strong>This runtime:</strong> <code>frontend/server.ts</code> now
+          grants <code>memory.access</code>, so the routes exist and the gate
+          resolves true. If the Intelligence project is not entitled to
+          Memory, the platform answers <code>403 MEMORY_NOT_ENTITLED</code>;
+          403 does not flip <code>isAvailable()</code>, and the sample renders
+          no error, so the panel is silently empty — the Fail case above.
         </p>
       </ui-try-it>
 

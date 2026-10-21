@@ -73,7 +73,7 @@ import { Callout, Panel, SourceCode, TryIt } from '../components/ui';
         gen-ui-agent, and A2UI generation — serves other showcase demos. The
         snippets' <code>_MessagesSnapshotWrapper</code> is also dropped: it was
         written for <code>ag_ui_strands</code> 0.1.7, which did not emit
-        <code>MessagesSnapshotEvent</code>. The installed 0.2.5 does
+        <code>MessagesSnapshotEvent</code>. The installed 1.0.1 does
         (<code>emit_messages_snapshot</code> defaults to true), and the current
         showcase source no longer carries the wrapper.
       </ui-callout>

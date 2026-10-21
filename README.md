@@ -53,7 +53,7 @@ Model  (gpt-5.4)
 | npm | 10+ (built on 12.0.1) | Or pnpm/yarn. |
 | Angular CLI | 20, 21, or 22 (built on 22.1.3) | `@copilotkit/angular` supports these three majors only. |
 | OpenAI API key | — | **Required.** The agent starts without one but every message errors. |
-| CopilotKit license key | — | **Optional.** Only affects the Threads and Memory routes. |
+| CopilotKit Intelligence key | — | **Required.** `CPK_INTELLIGENCE_API_KEY` in `frontend/.env`. Without it the runtime refuses to start, which takes every route down. `npx copilotkit project select` provisions one. |
 
 `@angular/cdk` must share your Angular major version. If you hit a peer-dependency error, pin it explicitly (`@angular/cdk@^22` on Angular 22).
 
@@ -90,6 +90,7 @@ Because the fallback is an empty string rather than an error, a missing key is s
 | Variable | Read by | What it does |
 |---|---|---|
 | `OPENAI_API_KEY` | agent (`backend/`) | **Required.** The model key. |
+| `CPK_INTELLIGENCE_API_KEY` | runtime (`frontend/`) | **Required.** CopilotKit Intelligence key; serves threads and memory. Put it in `frontend/.env`, which `server.ts` loads itself (an exported variable wins). The runtime refuses to start without it. |
 | `AWS_STRANDS_AGENT_URL` | runtime (`frontend/`) | Where the runtime finds the agent. Defaults to `http://localhost:8000/`. |
 | `PORT` | runtime (`frontend/`) | Runtime port. Defaults to `8200`. |
 | `COPILOTKIT_TELEMETRY_DISABLED` | runtime (`frontend/`) | Opt out of anonymous runtime telemetry. |
@@ -197,7 +198,7 @@ Demo routes share the app-root provider, so a conversation started in one demo c
 | `/voice-multimodal` | Voice and multimodal input | Attachments work; transcription fails by design (no service configured). |
 | `/human-in-the-loop` | Human-in-the-loop and interrupts | Ask it to delete your account with approval — nothing streams until you click. |
 | `/shared-state` | Shared state and agent context | The panel round-trips in the browser; the agent half needs backend state — see Known issues. |
-| `/threads` · `/memory` | Threads, memory, attachments, headless | Premium. Unlicensed, the locked state / fallback message *is* the pass. |
+| `/threads` · `/memory` | Threads, memory, attachments, headless | Run on CopilotKit Intelligence. Threads list, replay, and mutate. Memory lists if the project is entitled; otherwise `403 MEMORY_NOT_ENTITLED` and a silently empty panel. |
 | `/attachments` · `/headless` | Threads, memory, attachments, headless | Picker, drag-and-drop, paste; and a chat with no CopilotKit chrome. |
 | `/webmcp` | WebMCP | Ask which orders are open — the chat calls `searchOrders`. The WebMCP half needs Chrome 149+ with WebMCP enabled. |
 | `/copilot-runtime` | Copilot Runtime | `/info` lists `my_agent`, and a chat addressed by that key alone streams a reply. |
@@ -264,7 +265,8 @@ The `/shared-state` route's component expects agent state shaped `{ notes, prior
 | Connection errors mentioning `localhost` | DNS resolving to IPv6 while the server binds IPv4 | Use `127.0.0.1` in `AWS_STRANDS_AGENT_URL`. |
 | Production build fails on size | CopilotKit pulls in markdown and syntax-highlighting deps | Budgets are already raised to 5 MB warning / 7 MB error in `angular.json`. |
 | Peer-dependency error on install | `@angular/cdk` major mismatch | Install the matching major, e.g. `@angular/cdk@^22` on Angular 22. |
-| Thread list empty, drawer shows a lock | No license key | Expected — not a bug. |
+| Thread list empty, drawer shows a lock | `CPK_INTELLIGENCE_API_KEY` missing or invalid | Set it in `frontend/.env` and restart the runtime. |
+| Runtime exits: `CopilotKitIntelligence apiKey is required` | No Intelligence key | Same fix; `npx copilotkit project select` provisions one. |
 | Source panels say "Source not generated" | Generated map is stale | `npm run gen:sources` from `frontend/`. |
 
 ---

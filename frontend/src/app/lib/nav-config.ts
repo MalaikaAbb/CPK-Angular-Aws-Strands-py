@@ -177,7 +177,7 @@ export const NAV: NavGroup[] = [
         status: 'partial',
         premium: true,
         statusNote:
-          'Thread endpoints come from the Enterprise Intelligence Platform. Unlicensed, the list stays empty and the drawer renders its locked state — which is the expected result here.',
+          'Thread endpoints come from CopilotKit Intelligence. frontend/server.ts passes a CopilotKitIntelligence client to the runtime, so threads list, replay, and accept rename / archive / delete. A locked drawer now means the key is missing or invalid.',
       },
       {
         path: '/memory',
@@ -189,7 +189,7 @@ export const NAV: NavGroup[] = [
         status: 'partial',
         premium: true,
         statusNote:
-          'This runtime does not provide the memory routes, so isAvailable() is false and the guide’s fallback message is what renders.',
+          'frontend/server.ts grants memory.access, so the memory routes exist and isAvailable() is true. An Intelligence project not entitled to Memory answers 403 MEMORY_NOT_ENTITLED, which the guide’s sample does not surface: the panel is silently empty.',
       },
       {
         path: '/attachments',

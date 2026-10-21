@@ -15,22 +15,29 @@ import { Callout, DocSample, Panel, SourceCode, TryIt } from '../components/ui';
           Open the demo and look at both surfaces.
         </p>
         <p class="mt-2 text-slate-700">
-          <strong>Pass (unlicensed — the case here):</strong> the headless list
-          renders its controls with no threads, and the drawer renders its
-          <em>locked</em> state. The locked state is the correct result: it
-          proves the drawer mounted and read the platform's
-          <code>threads</code> license feature.
-          <strong>Pass (licensed):</strong> threads list, selecting a row
-          replays that conversation into the chat beside it, and rename /
+          <strong>Pass (the case here):</strong> the runtime is now built with
+          an Intelligence client, so
+          <code>/api/copilotkit/info</code> reports
+          <code>mode: "intelligence"</code> and
+          <code>threadEndpoints.mutations: true</code>. Threads list, selecting
+          a row replays that conversation into the chat beside it, and rename /
           archive / delete take effect.
-          <strong>Fail:</strong> a blank area with no locked state at all.
+          <strong>Fail:</strong> the drawer renders its <em>locked</em> state,
+          or a blank area with no drawer at all. The locked state used to be
+          the expected result on this harness, when the runtime had no
+          Intelligence client and the thread endpoints were switched off; it is
+          no longer.
         </p>
       </ui-try-it>
 
-      <ui-callout tone="warn" title="Thread endpoints are a platform capability">
-        Threads are served by the Enterprise Intelligence Platform through the
-        runtime, not by AWS Strands. Without a license key the list is empty by design
-        — that is not a bug in this harness.
+      <ui-callout tone="info" title="Thread endpoints are a platform capability">
+        Threads are served by CopilotKit Intelligence through the runtime, not
+        by AWS Strands. They exist only because
+        <code>frontend/server.ts</code> passes a
+        <code>CopilotKitIntelligence</code> client to
+        <code>CopilotRuntime</code> as <code>intelligence</code>; a runtime
+        built without it runs in SSE mode, answers in the browser exactly the
+        same way, and serves no threads at all.
       </ui-callout>
 
       <ui-panel heading="Resume a specific thread">
